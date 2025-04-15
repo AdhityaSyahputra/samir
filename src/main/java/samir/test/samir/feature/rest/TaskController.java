@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import samir.test.samir.feature.IncompletedTaskRespDto;
 import samir.test.samir.feature.TaskReqDto;
 import samir.test.samir.feature.model.Task;
 import samir.test.samir.feature.service.TaskService;
@@ -22,7 +23,7 @@ public class TaskController {
         return taskService.getAllTasks();
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public Task createTask(@RequestBody TaskReqDto task, HttpServletRequest request) {
         return taskService.createTask(task,request);
     }
@@ -33,7 +34,7 @@ public class TaskController {
     }
 
     @GetMapping("/incomplete")
-    public List<Task> getIncompleteTasks() {
+    public List<IncompletedTaskRespDto> getIncompleteTasks() {
         return taskService.getIncompleteTasks();
     }
 }

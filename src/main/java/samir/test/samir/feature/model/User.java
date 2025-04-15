@@ -3,6 +3,8 @@ package samir.test.samir.feature.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 
 @Entity
 @Data
@@ -17,4 +19,6 @@ public class User {
     private String username;
     private String password;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Task> tasks;
 }

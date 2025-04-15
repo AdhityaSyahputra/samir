@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import samir.test.samir.feature.IncompletedTaskRespDto;
 import samir.test.samir.feature.TaskReqDto;
 import samir.test.samir.feature.model.Task;
 import samir.test.samir.feature.model.User;
@@ -12,6 +13,7 @@ import samir.test.samir.repository.UserRepository;
 import samir.test.samir.security.JwtUtil;
 import samir.test.samir.util.JsonConvertUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -48,8 +50,18 @@ public class TaskService {
         return taskRepository.save(task);
     }
 
-    public List<Task> getIncompleteTasks() {
-        return taskRepository.findByInCompleted();
+    public List<IncompletedTaskRespDto> getIncompleteTasks() {
+        List<Task> data = taskRepository.findByInCompleted();
+        List<IncompletedTaskRespDto> listIncompleted = new ArrayList<>();
+
+        for (Task dataTask : data){
+            IncompletedTaskRespDto incompleted = new IncompletedTaskRespDto();
+            incompleted.setTitle(dataTask.getTitle());
+            incompleted.setDescription(dataTask.getDescription());
+            incompleted.setUserId(dataTask.getUser().getId());
+            listIncompleted.add(incompleted);
+        }
+        return listIncompleted;
     }
 }
 

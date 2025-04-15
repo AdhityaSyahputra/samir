@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import samir.test.samir.feature.model.User;
 import samir.test.samir.repository.UserRepository;
 
+import java.util.ArrayList;
 import java.util.Collections;
 
 @Service
@@ -24,7 +25,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
                 user.getPassword(),
-                Collections.emptyList()
+                new ArrayList<>()
         );
     }
 }

@@ -3,15 +3,18 @@ package samir.test.samir.security;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.SecretKey;
 import java.util.Date;
 
 @Component
 public class JwtUtil {
     private final String SECRET_KEY = "secret";
     private final long EXPIRATION_TIME = 1000 * 60 * 60 * 24; // 24 hours
+    SecretKey secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
     public String generateToken(String username,Long userId) {
         return Jwts.builder()
@@ -19,7 +22,7 @@ public class JwtUtil {
                 .claim("userId", userId)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+                .signWith(secretKey)
                 .compact();
     }
 
@@ -32,12 +35,12 @@ public class JwtUtil {
     }
 
     private Claims getClaims(String token) {
-        return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
+        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
     }
 
     public Long extractUserId(String token) {
         Claims claims = Jwts.parser()
-                .setSigningKey(SECRET_KEY)
+                .setSigningKey(secretKey)
                 .parseClaimsJws(token)
                 .getBody();
         return Long.parseLong(claims.get("userId").toString());
